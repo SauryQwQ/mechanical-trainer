@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1f7a64" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="机械刷题" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <title>机械类面试刷题</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="app-icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="app-icon.svg" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">机械类面试题库</p>
+          <h1>主动回忆与错题复习</h1>
+        </div>
+        <div class="stats" aria-label="学习统计">
+          <div>
+            <span id="totalCount">0</span>
+            <small>总题</small>
+          </div>
+          <div>
+            <span id="wrongCount">0</span>
+            <small>错题</small>
+          </div>
+          <div>
+            <span id="progressCount">0</span>
+            <small>已刷</small>
+          </div>
+        </div>
+      </header>
+
+      <nav class="mode-tabs" aria-label="刷题模式">
+        <button class="tab active" id="studyTab" type="button">顺序刷题</button>
+        <button class="tab" id="predictionTab" type="button">押题模块</button>
+        <button class="tab" id="reviewTab" type="button">错题复习</button>
+        <button class="tab" id="mockTab" type="button">模拟面试</button>
+        <button class="tab" id="analysisTab" type="button">弱项分析</button>
+        <button class="tab" id="dataTab" type="button">数据备份</button>
+      </nav>
+
+      <section class="workspace">
+        <aside class="side-panel">
+          <div class="panel-block profile-block">
+            <label for="userSelect">用户档案</label>
+            <select id="userSelect"></select>
+            <div class="profile-create">
+              <input id="newUserInput" type="text" placeholder="输入新用户名" />
+              <button class="ghost" id="createUserBtn" type="button">创建</button>
+            </div>
+          </div>
+          <div class="panel-block">
+            <label for="deckFilter">题库板块</label>
+            <select id="deckFilter"></select>
+          </div>
+          <div class="panel-block">
+            <label for="searchInput">搜索</label>
+            <input id="searchInput" type="search" placeholder="关键词" />
+          </div>
+          <div class="panel-block">
+            <label for="fileFilter">文件</label>
+            <select id="fileFilter"></select>
+          </div>
+          <div class="panel-block">
+            <label for="groupFilter">大类</label>
+            <select id="groupFilter"></select>
+          </div>
+          <div class="panel-block">
+            <label for="subjectFilter">科目 / 专题</label>
+            <select id="subjectFilter"></select>
+          </div>
+          <div class="panel-block">
+            <label for="priorityFilter">优先级</label>
+            <select id="priorityFilter"></select>
+          </div>
+          <div class="panel-block">
+            <label for="favoriteFilter">收藏</label>
+            <select id="favoriteFilter"></select>
+          </div>
+          <div class="panel-block">
+            <label>当前范围进度</label>
+            <div class="progress-track">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+          </div>
+          <div class="panel-actions">
+            <button class="ghost" id="resetStudy" type="button">重置当前范围进度</button>
+            <button class="ghost danger" id="clearWrong" type="button">清空错题本</button>
+          </div>
+        </aside>
+
+        <section class="question-area" aria-live="polite">
+          <div class="question-meta" id="questionMeta">
+            <span id="modeLabel">顺序刷题</span>
+            <span id="groupLabel">全部大类</span>
+            <span id="subjectLabel">全部科目</span>
+            <span id="priorityLabel">全部题目</span>
+            <span id="numberLabel">第 0 题</span>
+          </div>
+
+          <article class="question-card" id="questionCard">
+            <div class="question-tools">
+              <button class="ghost compact" id="favoriteBtn" type="button">收藏</button>
+              <button class="ghost compact" id="editAnswerBtn" type="button">修订答案</button>
+            </div>
+            <p class="source-line" id="sourceLine"></p>
+            <h2 id="questionText">正在载入题库...</h2>
+
+            <div class="input-panel" id="inputPanel">
+              <div class="input-heading">
+                <label for="answerInput" id="answerInputLabel">你的答案</label>
+                <button class="ghost mini" id="clearDraftBtn" type="button">清空</button>
+              </div>
+              <textarea id="answerInput" rows="5" placeholder="把你能回忆出的答案写在这里，再提交评分。"></textarea>
+            </div>
+
+            <div class="score-box hidden" id="scoreBox">
+              <div class="score-main">
+                <span id="scoreValue">0</span>
+                <strong id="scoreLabel">待评分</strong>
+              </div>
+              <p id="scoreExplain"></p>
+            </div>
+
+            <div class="concept-box hidden" id="conceptBox">
+              <p>评分点</p>
+              <div class="concept-groups">
+                <div>
+                  <strong>已命中</strong>
+                  <div id="hitConcepts"></div>
+                </div>
+                <div>
+                  <strong>待补充</strong>
+                  <div id="missConcepts"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="answer hidden" id="answerBox">
+              <p>标准答案</p>
+              <div id="answerText"></div>
+            </div>
+            <div class="answer-editor hidden" id="answerEditor">
+              <label for="answerEditInput">本地修订答案</label>
+              <textarea id="answerEditInput" rows="5"></textarea>
+              <div class="editor-actions">
+                <button class="primary" id="saveAnswerEditBtn" type="button">保存修订</button>
+                <button class="ghost" id="cancelAnswerEditBtn" type="button">取消</button>
+                <button class="ghost danger" id="resetAnswerEditBtn" type="button">恢复原答案</button>
+              </div>
+            </div>
+            <p class="word-notice hidden" id="wordNotice"></p>
+          </article>
+
+          <div class="actions" id="submitActions">
+            <button class="primary" id="submitAnswerBtn" type="button">提交并评分</button>
+            <button class="ghost" id="skipBtn" type="button">跳过</button>
+          </div>
+
+          <div class="actions hidden" id="selfCheckActions">
+            <button class="primary" id="familiarBtn" type="button">熟悉</button>
+            <button class="secondary" id="unclearBtn" type="button">模糊</button>
+            <button class="ghost" id="skipSelfCheckBtn" type="button">跳过</button>
+          </div>
+
+          <div class="actions hidden" id="nextActions">
+            <button class="ghost" id="prevBtn" type="button">上一题</button>
+            <button class="primary" id="nextBtn" type="button">下一题</button>
+          </div>
+
+          <section class="special-area hidden" id="mockArea">
+            <div class="special-head">
+              <div>
+                <p class="eyebrow">模拟面试模式</p>
+                <h2 id="mockTitle">随机抽题，限时作答</h2>
+              </div>
+              <div class="timer-pill" id="mockTimer">10:00</div>
+            </div>
+            <div class="mock-card" id="mockIntro">
+              <p>每轮随机抽 3 道专业题和 2 道翻译题，统一作答后再评分并生成报告。</p>
+              <div class="mock-range">
+                <div class="mock-range-head">
+                  <strong>专业题抽题大类</strong>
+                  <div class="mini-actions">
+                    <button class="ghost mini" id="selectAllMockGroupsBtn" type="button">全选</button>
+                    <button class="ghost mini" id="clearMockGroupsBtn" type="button">清空</button>
+                  </div>
+                </div>
+                <div class="check-grid" id="mockGroupList"></div>
+                <p class="word-notice hidden" id="mockRangeNotice"></p>
+              </div>
+              <button class="primary" id="startMockBtn" type="button">开始一轮模拟面试</button>
+            </div>
+            <div class="mock-card hidden" id="mockQuestionPanel">
+              <p class="source-line" id="mockSource"></p>
+              <h2 id="mockQuestionText"></h2>
+              <textarea id="mockAnswerInput" rows="7" placeholder="像真实面试一样完整作答，提交前不会显示标准答案。"></textarea>
+              <div class="actions">
+                <button class="ghost" id="mockPrevBtn" type="button">上一题</button>
+                <button class="primary" id="mockNextBtn" type="button">保存并下一题</button>
+                <button class="secondary" id="finishMockBtn" type="button">结束并评分</button>
+              </div>
+            </div>
+            <div class="mock-report hidden" id="mockReport"></div>
+          </section>
+
+          <section class="special-area hidden" id="analysisArea">
+            <div class="special-head">
+              <div>
+                <p class="eyebrow">弱项分析</p>
+                <h2>复习路径建议</h2>
+              </div>
+            </div>
+            <div id="analysisContent"></div>
+          </section>
+
+          <section class="special-area hidden" id="dataArea">
+            <div class="special-head">
+              <div>
+                <p class="eyebrow">数据备份</p>
+                <h2>导出 / 恢复本地学习记录</h2>
+              </div>
+            </div>
+            <div class="data-grid">
+              <button class="primary" id="exportAllBtn" type="button">一键备份全部数据</button>
+              <button class="ghost" id="exportWrongBtn" type="button">导出错题本</button>
+              <button class="ghost" id="exportFavoriteBtn" type="button">导出收藏题</button>
+              <button class="ghost" id="exportEditsBtn" type="button">导出修订答案</button>
+              <button class="ghost" id="exportReviewBtn" type="button">导出复习记录</button>
+              <label class="import-box" for="importBackupInput">导入恢复
+                <input id="importBackupInput" type="file" accept="application/json,.json" />
+              </label>
+            </div>
+            <p class="word-notice hidden" id="dataNotice"></p>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script src="questions.js"></script>
+    <script src="prediction_questions.js"></script>
+    <script src="translation_questions.js"></script>
+    <script src="sentence_translation_questions.js"></script>
+    <script src="sentence_translation_extra_questions.js"></script>
+    <script src="app.js"></script>
+    <script>
+      if ("serviceWorker" in navigator && location.protocol === "https:") {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./sw.js").catch(() => {});
+        });
+      }
+    </script>
+  </body>
+</html>

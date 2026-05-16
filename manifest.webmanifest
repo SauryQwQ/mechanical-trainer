@@ -1,0 +1,19 @@
+{
+  "name": "机械类面试刷题",
+  "short_name": "机械刷题",
+  "description": "机械类复试刷题、押题、英文翻译和模拟面试工具。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f8f4",
+  "theme_color": "#1f7a64",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

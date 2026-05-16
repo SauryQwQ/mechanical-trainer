@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#1f7a64"/>
+  <circle cx="256" cy="256" r="150" fill="#dcefe9"/>
+  <circle cx="256" cy="256" r="62" fill="#1f7a64"/>
+  <g fill="#dcefe9">
+    <rect x="236" y="60" width="40" height="104" rx="20"/>
+    <rect x="236" y="348" width="40" height="104" rx="20"/>
+    <rect x="348" y="236" width="104" height="40" rx="20"/>
+    <rect x="60" y="236" width="104" height="40" rx="20"/>
+    <rect x="236" y="60" width="40" height="104" rx="20" transform="rotate(45 256 256)"/>
+    <rect x="236" y="348" width="40" height="104" rx="20" transform="rotate(45 256 256)"/>
+    <rect x="348" y="236" width="104" height="40" rx="20" transform="rotate(45 256 256)"/>
+    <rect x="60" y="236" width="104" height="40" rx="20" transform="rotate(45 256 256)"/>
+  </g>
+  <text x="256" y="276" text-anchor="middle" font-family="Arial, sans-serif" font-size="96" font-weight="800" fill="#ffffff">M</text>
+</svg>
